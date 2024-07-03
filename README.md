@@ -12,7 +12,7 @@ As primarily a frontend developer, I was initially skeptical about it (I remembe
 
 Of course, you need a lot more on the backend side to make it work, but the frontend requires just a few attributes.
 
-The link to GitHub repository with the code examples is [here]()
+The link to GitHub repository with the code examples is [here](https://github.com/yohadams/is-htmx-the-future-of-modern-frontend)
 
 ## Where the magic happening
 
