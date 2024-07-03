@@ -1,26 +1,22 @@
-# Is HTMX the future of the modern frontend?
+# Is HTMX the Future of Modern Frontend Development?
 
-Probably no.
+Probably not, but let's dive into it to check it out.
 
 ## Introduction
 
-But regardless let's talk about it ;)
+HTMX, though not a newcomer in the technology scene, has recently seen a surge in popularity, which some might attribute to enthusiastic advocacy from backend developers. This compact and robust library supports AJAX, CSS transitions, and even WebSocket, all facilitated through element attributes.
 
-A little bit about HTMX itself: it's not that new, but lately, it has gained a lot of popularity (probably some backend developers' propaganda). It's small, robust, and does everything that a JS library should do - AJAX, CSS transitions, and even WebSocket support. And it accomplishes all this using element attributes.
+As a frontend developer with a background in the PHP/jQuery stack, I was initially skeptical about HTMX as it reminded me of that stack. Yet, over time, its simplicity and ease of implementation won me over. HTMX's minimal frontend requirements—just a few attributes—paired with any backend technology, make it a versatile choice.
 
-As primarily a frontend developer, I was initially skeptical about it (I remember the days when I had to inject PHP variables inside JS scripts). However, after some time, I started to appreciate it. It's simple, easy to use, and not hard to implement. The best part is that you can use it with any backend technology you prefer.
+For those interested, code examples are available on this [GitHub repository](https://github.com/yohadams/is-htmx-the-future-of-modern-frontend).
 
-Of course, you need a lot more on the backend side to make it work, but the frontend requires just a few attributes.
+## Exploring HTMX in Action
 
-The link to GitHub repository with the code examples is [here](https://github.com/yohadams/is-htmx-the-future-of-modern-frontend)
+Let't just take some modern javascript concepts and try to implement them with HTMX.
 
-## Where the magic happening
+### The Counter Example
 
-Lets just take some modern javascript concepts and convert it to HTMX way.
-
-### The Counter
-
-Let's start with implementation of simple counter like in fresh React app. We have a button that increments the counter and displays the value.
+Consider a simple counter, akin to one you might find in a new React application:
 
 ```html
 <span id="counter" hx-get="counter" hx-trigger="load">0</span>
@@ -29,9 +25,9 @@ Let's start with implementation of simple counter like in fresh React app. We ha
 </button>
 ```
 
-what we have here is span element that on load will make a request to `/counter` endpoint and replace the content of the element with the response. The button element on click will make a POST request to `/increment` endpoint and replace the content of element specified in `hx-target` attribute with the response.
+Here, a `<span>` element fetches the current count from a `/counter` endpoint upon loading and updates its content with the response. The button, when clicked, sends a POST request to `/increment`, updating the targeted element with the new count.
 
-and our server side pseudo code:
+Server-side pseudocode for this functionality might look like this:
 
 ```javascript
 let counter = 0;
@@ -47,21 +43,19 @@ server.get("/counter", (_, res) => {
 });
 ```
 
-and depending of if we want to all users to see the same counter we can use `counter` as global variable or we can use session to store the counter value. In our example we are using global variable. So even after page refresh we get the same value.
+In this scenario, using a global variable for the counter allows its value to persist across page refreshes for all users.
 
-Simple isn't it?
+### Server Sent Events (SSE)
 
-### SSE - Server Sent Events
+For those unfamiliar with SSE, it represents a server push technology that enables the server to send updates to the client automatically, without the client needing to request for these updates repeatedly. This method facilitates a one-way communication stream from the server to the client, which is ideal for real-time features such as live notifications or updates.
 
-For those who are not familiar with SSE, it's a server push technology that allows a server to send data to a client without the client having to request it. It's a one-way communication from the server to the client. The client subscribes to the event, and the server sends the data. The client can't send data to the server using SSE.
-
-HTMX doesn't have built-in support for SSE, but we can use an extension for it (there is also an extension for WebSocket). The extension is called sse, and it's used by adding the hx-ext="sse" attribute to the element. The sse-connect attribute is used to specify the endpoint that will be connected to. The sse-swap attribute is used to specify the element that will be updated with the response.
+While HTMX doesn't natively support SSE, it can be enabled with extensions. The setup involves specifying the server endpoint and the DOM element to update:
 
 ```html
 <div hx-ext="sse" sse-connect="/subscribe-to-alerts" sse-swap="alert"></div>
 ```
 
-and our server side pseudo code:
+Server-side handling might include:
 
 ```javascript
 server.get("/subscribe-to-alerts", (req, res) => {
@@ -89,19 +83,18 @@ which means that the request will be triggered when the element is loaded. The `
 </div>
 ```
 
-and our server side pseudo code:
+This triggers a request when the element loads, replacing it with a server-generated graph:
 
 ```javascript
 server.get("/generated-graph", (req, res) => {
-  const graph = generateGraph(); // lets assume it's send back the <svg /> and its generating 5 seconds
+  const graph = generateGraph(); // Assume this takes about 5 seconds to process.
   res.send(graph);
 });
 ```
 
-### Infinite scroll
+### Infinite Scrolling
 
-In this case we still using hx-get to make request, but as you can see we
-added `hx-trigger="revealed"` which means that the request will be triggered when the element is scrolled into view. The `hx-swap` attribute is set to `afterend` which means that the response will be inserted after the element so in this case at the end of table and voile up we have infinite scrolling.
+HTMX can also facilitate infinite scrolling by triggering requests when an element is revealed on the screen:
 
 ```html
 <tr hx-get="/users/?page=2" hx-trigger="revealed" hx-swap="afterend">
@@ -111,9 +104,7 @@ added `hx-trigger="revealed"` which means that the request will be triggered whe
 </tr>
 ```
 
-Of course you need to have a server that will handle the request and return the next page of the table. A lot is happening on backend side.
-
-some pseudo code for the server side:
+Server-side logic to support this might involve:
 
 ```javascript
 server.get("/users", (req, res) => {
@@ -142,6 +133,8 @@ server.get("/users", (req, res) => {
 
 ## Conclusion
 
-HTMX seems easy to use and it takes me back to the old times when I was using jQuery. For me personally i will try tu use it in some bigger project and compare it to React. But for now it's a great tool for small projects or for those who don't want to use JS frameworks.
+HTMX's design philosophy centers on accessibility and simplicity, reminiscent of jQuery's early appeal, yet it brings forward contemporary capabilities that are especially advantageous for lightweight projects or as a streamlined alternative to more complex JavaScript frameworks. Its compatibility with WebComponents points to its potential in supporting future hybrid applications.
 
-One think i found is that you can use HTMX combined with WebComponents and i would want to try it in the future.
+On production sites, I can see it being used in some more static types of applications like blogs or e-commerce sites. It's a great tool for enhancing user experience without the need for complex frontend frameworks. It's also a great tool for backend developers who want to add some interactivity to their applications without the need to learn a lot of frontend technologies—pretty much just HTML and a couple of new attributes.
+
+On a personal note, I've been utilizing HTMX as an enhancement tool in a family-run e-commerce business, where our site was initially built with PHP and jQuery. Incorporating HTMX involved simply appending a script to the site’s header. The transition involved transforming page updates from full refreshes to more elegant, HTMX-driven updates. This process was surprisingly straightforward, significantly enhancing site responsiveness and interactivity without a steep learning curve. The ease of integration and immediate improvements observed underscore the practical utility of HTMX, confirming its considerable potential for broader adoption in my future projects.
