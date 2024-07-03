@@ -1,0 +1,16 @@
+{
+  "name": "is-htmx-the-future-of-modern-frontend",
+  "version": "1.0.0",
+  "description": "Article about HTMX",
+  "type": "module",
+  "scripts": {
+    "counter": "node ./counter/counter.js",
+    "sse": "node ./sse/sse.js",
+    "lazy-loading": "node ./lazy-loading/lazy-loading.js",
+    "infinite-scrolling": "node ./infinite-scrolling/infinite-scrolling.js"
+  },
+  "author": "Leonard Armanowski",
+  "dependencies": {
+    "express": "^4.19.2"
+  }
+}

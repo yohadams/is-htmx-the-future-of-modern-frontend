@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Infinite scrolling</title>
+  <script src="https://unpkg.com/htmx.org@2.0.0"></script>
+</head>
+<body>
+  
+  <h1>Infinite scrolling</h1>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Job</th>
+        <th>Team</th>
+      </tr>
+      <tbody hx-get="/users" hx-trigger="loadmore">
+        <tr>
+          <td>John Doe 1</td>
+          <td>Frontend developer</td>
+          <td>Team 1</td>
+        </tr>
+        <tr>
+          <td>John Doe 2</td>
+          <td>Frontend developer</td>
+          <td>Team 1</td>
+        </tr>
+        <tr>
+          <td>John Doe 3</td>
+          <td>Frontend developer</td>
+          <td>Team 1</td>
+        </tr>
+        <tr>
+          <td>John Doe 4</td>
+          <td>Frontend developer</td>
+          <td>Team 1</td>
+        </tr>
+        <tr hx-get="/users/?page=2" hx-trigger="revealed" hx-swap="afterend">
+          <td>John Doe 5</td>
+          <td>Frontend developer</td>
+          <td>Team 1</td>
+        </tr>
+      </tbody>
+    </thead>
+  </table>
+</body>
+</html>
